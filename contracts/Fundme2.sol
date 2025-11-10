@@ -2,23 +2,36 @@
 
 pragma solidity ^0.8.18;
 
-//Using the import from npm 
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// Using a local interface so the editor finds it without needing node_modules installed.
+import {AggregatorV3Interface} from "./interfaces/AggregatorV3Interface.sol";
 
 contract FundMe2{
 
-    uint256 public minimumUsd = 5 ;
+    uint256 public minimumUsd = 5e18 ;
 
     function fund() public payable {
-        require(msg.value>= minimumUsd,"didnt send enough money");
+        require(getConversionRate(msg.value)>= minimumUsd,"didnt send enough money");
 
     }
 
-    function getPrice() public {
+    function getPrice() public view returns(uint256){
         //Address 0x694AA1769357215DE4FAC081bf1f309aDC325306
         //ABI 
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
+        (, int256 price,,,) = priceFeed.latestRoundData();
+
+        return uint256(price * 1e10);
+        
     }
-    function getConversionRate() public view returns (uint256){
+
+    function getConversionRate(uint256 ethAmount) public view returns(uint256) {
+        uint256 ethPrice = getPrice();
+        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1e18 ; 
+
+        return ethAmountInUsd;
+    }
+
+    function getVersion() public view returns (uint256){
         return AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306).version();
     }
 }
