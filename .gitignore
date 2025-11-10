@@ -1,0 +1,32 @@
+## Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Environment
+.env
+.env.*.local
+
+## Solidity / build artifacts
+artifacts/
+build-info/
+cache/
+typechain/
+out/
+.openzeppelin/
+
+## VS Code
+.vscode/
+
+## System files
+.DS_Store
+thumbs.db
+
+## Logs
+# use the specific patterns above (npm/yarn); avoid wildcard-only lines to keep parser happy
+
+## Misc
+coverage/
+coverage.json
+*.cache
